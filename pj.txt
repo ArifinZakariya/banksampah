@@ -1,0 +1,170 @@
+Generate struktur project modular dan scalable untuk aplikasi Bank Sampah menggunakan:
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Prisma ORM
+- PostgreSQL
+
+Gunakan clean architecture dan feature-based structure.
+
+==================================================
+STRUKTUR YANG DIINGINKAN
+
+Buat folder project seperti ini:
+
+src/
+├── app/
+│   ├── (auth)/
+│   ├── admin/
+│   ├── anggota/
+│   ├── api/
+│   └── globals.css
+│
+├── components/
+│   ├── ui/
+│   ├── layouts/
+│   ├── shared/
+│   ├── charts/
+│   ├── tables/
+
+│   ├── forms/
+│   └── cards/
+│
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── schemas/
+│   │   ├── types/
+│   │   └── utils/
+│   │
+│   ├── users/
+│   ├── sampah/
+│   ├── transaksi/
+│   ├── tabungan/
+│   ├── pencairan/
+│   ├── analytics/
+│   └── logs/
+│
+├── lib/
+│   ├── prisma.ts
+│   ├── auth.ts
+│   ├── jwt.ts
+│   ├── upload.ts
+│   ├── utils.ts
+│   └── constants.ts
+│
+├── services/
+│   ├── api.ts
+│   ├── fetcher.ts
+│   └── query-client.ts
+│
+├── hooks/
+├── store/
+├── types/
+├── middleware/
+├── validations/
+└── prisma/
+├── schema.prisma
+├── migrations/
+└── seed.ts
+
+==================================================
+FITUR YANG HARUS DIPISAH MODULAR
+
+Setiap fitur harus memiliki:
+
+- components
+- services
+- hooks
+- schemas
+- types
+- utils
+
+Fitur:
+
+1. auth
+2. users
+3. sampah
+4. transaksi
+5. tabungan
+6. pencairan
+7. analytics
+8. logs
+
+==================================================
+ROLE APLIKASI
+
+1. ADMIN
+2. ANGGOTA
+
+==================================================
+FITUR APLIKASI
+
+AUTH:
+
+- login
+- register
+- logout
+- JWT auth
+- middleware role
+
+ADMIN:
+
+- CRUD data sampah
+- verifikasi transaksi
+- update data anggota
+- konversi sampah ke uang
+- melihat analytics
+- melihat log aktivitas
+- approve pencairan
+
+ANGGOTA:
+
+- setor sampah
+- melihat saldo
+- melihat histori transaksi
+- upload foto sampah
+- pencairan saldo 3 bulan sekali
+
+==================================================
+DATABASE ENTITIES
+
+Buat Prisma schema modular untuk:
+
+- User
+- Sampah
+- Transaksi
+- Tabungan
+- Pencairan
+- Logs
+
+Tambahkan:
+
+- enum role
+- enum transaction status
+- timestamps
+- relasi lengkap
+
+==================================================
+TRANSACTION FLOW
+
+Anggota setor sampah
+↓
+Status pending
+↓
+Admin validasi
+↓
+Sistem hitung:
+total_uang = berat_kg × harga_per_kg
+↓
+Saldo tabungan bertambah
+↓
+Log aktivitas tersimpan
+↓
+Pencairan hanya bisa setiap 3 bulan
+
+==================================================

@@ -1,0 +1,18 @@
+export const ROLES = {
+  ADMIN: "ADMIN",
+  ANGGOTA: "ANGGOTA",
+} as const;
+
+export const TRANSACTION_STATUS = {
+  PENDING: "PENDING",
+  DIKONFIRMASI: "DIKONFIRMASI",
+  DITOLAK: "DITOLAK",
+} as const;
+
+export const PENCAIRAN_STATUS = {
+  MENUNGGU: "MENUNGGU",
+  DISETUJUI: "DISETUJUI",
+  DITOLAK: "DITOLAK",
+} as const;
+
+export const PENCAIRAN_MIN_MONTHS = 3;

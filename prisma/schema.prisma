@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  ANGGOTA
+}
+
+enum StatusTransaksi {
+  PENDING
+  DIKONFIRMASI
+  DITOLAK
+}
+
+enum StatusPencairan {
+  MENUNGGU
+  DISETUJUI
+  DITOLAK
+}
+
+model User {
+  id        String   @id @default(cuid())
+  nama      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ANGGOTA)
+  foto      String?
+  alamat    String?
+  noTelpon  String?
+
+  transaksi Transaksi[]
+  tabungan  Tabungan?
+  pencairan Pencairan[]
+  logs      Log[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Sampah {
+  id          String   @id @default(cuid())
+  nama        String
+  hargaPerKg  Float    @map("harga_per_kg")
+  satuan      String   @default("kg")
+  deskripsi   String?
+  foto        String?
+
+  transaksi   Transaksi[]
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("sampah")
+}
+
+model Transaksi {
+  id        String          @id @default(cuid())
+  userId    String          @map("user_id")
+  sampahId  String          @map("sampah_id")
+  beratKg   Float           @map("berat_kg")
+  totalHarga Float          @map("total_harga")
+  status    StatusTransaksi @default(PENDING)
+  foto      String?
+  catatan   String?
+  verifiedBy String?         @map("verified_by")
+
+  user      User   @relation(fields: [userId], references: [id])
+  sampah    Sampah @relation(fields: [sampahId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("transaksi")
+}
+
+model Tabungan {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  saldo     Float    @default(0)
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tabungan")
+}
+
+model Pencairan {
+  id              String          @id @default(cuid())
+  userId          String           @map("user_id")
+  jumlah          Float
+  status          StatusPencairan  @default(MENUNGGU)
+  tanggalPencairan DateTime?        @map("tanggal_pencairan")
+  catatan         String?
+
+  user            User            @relation(fields: [userId], references: [id])
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@map("pencairan")
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  aksi      String
+  detail    String?
+
+  user      User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("logs")
+}
