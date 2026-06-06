@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendOTP, generateOTP } from "@/lib/email";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 export async function POST(request: Request) {
   try {
@@ -40,27 +43,25 @@ export async function POST(request: Request) {
       }
     }
 
-    await prisma.verification.deleteMany({
-      where: {
-        email,
-        purpose,
-        used: false,
-      },
-    });
+    const client = await pool.connect();
+    try {
+      await client.query(
+        "DELETE FROM verifications WHERE email = $1 AND purpose = $2 AND used = false",
+        [email, purpose]
+      );
 
-    const code = generateOTP();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      const code = generateOTP();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    await prisma.verification.create({
-      data: {
-        email,
-        code,
-        purpose,
-        expiresAt,
-      },
-    });
+      await client.query(
+        "INSERT INTO verifications (email, code, purpose, expires_at) VALUES ($1, $2, $3, $4)",
+        [email, code, purpose, expiresAt]
+      );
 
-    await sendOTP({ email, code, purpose: purpose as "register" | "reset-password" });
+      await sendOTP({ email, code, purpose: purpose as "register" | "reset-password" });
+    } finally {
+      client.release();
+    }
 
     return NextResponse.json({
       message: "Kode verifikasi telah dikirim ke email Anda",
