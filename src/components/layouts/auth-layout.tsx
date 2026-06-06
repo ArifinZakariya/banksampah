@@ -33,7 +33,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
         <footer className="absolute bottom-4 z-10 text-center text-sm text-white/50">
-          &copy; {new Date().getFullYear()} Bank Sampah
+          &copy; {new Date().getFullYear()} Gusdurian Mojokerto
         </footer>
       </div>
     </>
