@@ -1,25 +1,28 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, newPassword } = await request.json();
 
-    if (!email) {
+    if (!email || !newPassword) {
       return NextResponse.json(
-        { error: "Email harus diisi" },
+        { error: "Email dan password baru harus diisi" },
+        { status: 400 }
+      );
+    }
+
+    if (newPassword.length < 6) {
+      return NextResponse.json(
+        { error: "Password baru minimal 6 karakter" },
         { status: 400 }
       );
     }
 
     const user = await prisma.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        nama: true,
-        email: true,
-        password: true,
-      },
+      select: { id: true },
     });
 
     if (!user) {
@@ -29,9 +32,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
     return NextResponse.json({
-      message: "Password ditemukan",
-      password: user.password,
+      message: "Password berhasil direset",
     });
   } catch (error) {
     return NextResponse.json(
