@@ -13,4 +13,8 @@ export const userService = {
       body: JSON.stringify(data),
     });
   },
+
+  async delete(id: string): Promise<void> {
+    return apiRequest<void>(`/api/users/${id}`, { method: "DELETE" });
+  },
 };

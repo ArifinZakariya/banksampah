@@ -8,13 +8,16 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   const users = await prisma.user.findMany({
+    where: { role: "ANGGOTA" },
     select: {
       id: true,
       nama: true,
       email: true,
-      role: true,
       createdAt: true,
+      tabungan: { select: { saldo: true } },
+      _count: { select: { transaksi: true } },
     },
+    orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(users);
 }
