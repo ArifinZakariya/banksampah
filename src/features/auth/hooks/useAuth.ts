@@ -32,7 +32,7 @@ export function useAuth() {
     setError(null);
     try {
       const res = await authService.register(data);
-      router.push("/anggota");
+      router.push("/login");
     } catch (err: any) {
       setError(err.message || "Registrasi gagal");
     } finally {
