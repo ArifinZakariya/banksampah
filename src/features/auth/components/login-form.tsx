@@ -59,7 +59,12 @@ export function LoginForm({ className, logoSrc }: { className?: string; logoSrc?
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-white/70 text-sm font-medium">Password</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className="text-white/70 text-sm font-medium">Password</Label>
+              <Link href="/forgot-password" className="text-xs text-white/50 hover:text-white/70 transition-colors">
+                Lupa password?
+              </Link>
+            </div>
             <Input
               id="password"
               type="password"
