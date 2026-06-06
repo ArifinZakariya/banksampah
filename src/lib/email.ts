@@ -1,6 +1,12 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 interface SendOTPParams {
   email: string;
@@ -52,8 +58,8 @@ export async function sendOTP({ email, code, purpose }: SendOTPParams) {
     </html>
   `;
 
-  await resend.emails.send({
-    from: "Bank Sampah <onboarding@resend.dev>",
+  await transporter.sendMail({
+    from: `"Bank Sampah" <${process.env.GMAIL_USER}>`,
     to: email,
     subject,
     html,
