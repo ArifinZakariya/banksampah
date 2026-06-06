@@ -65,10 +65,10 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: "Kode verifikasi telah dikirim ke email Anda",
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Send OTP error:", error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan server" },
+      { error: error.message || "Terjadi kesalahan server" },
       { status: 500 }
     );
   }

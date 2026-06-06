@@ -21,7 +21,7 @@ export async function apiRequest<T>(
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: "Request failed" }));
-    throw new ApiError(res.status, error.message);
+    throw new ApiError(res.status, error.message || error.error || "Request failed");
   }
 
   return res.json();
