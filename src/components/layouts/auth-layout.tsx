@@ -17,7 +17,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
         .auth-glass-overlay {
           position: absolute;
           inset: 0;
-          background-color: rgba(0,0,0,0.55);
+          background: linear-gradient(135deg, rgba(5,150,105,0.3) 0%, rgba(16,185,129,0.2) 50%, rgba(52,211,153,0.1) 100%);
           border-radius: inherit;
         }
         .auth-glass-content {

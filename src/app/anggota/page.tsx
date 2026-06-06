@@ -66,18 +66,21 @@ export default async function AnggotaDashboard({
       value: `Rp ${(data.tabungan?.saldo ?? 0).toLocaleString("id-ID")}`,
       icon: Wallet,
       color: "text-emerald-600 bg-emerald-50",
+      gradient: "gradient-card-emerald",
     },
     {
       title: "Total Setoran",
       value: `${data.transaksiCount}x`,
       icon: Recycle,
       color: "text-blue-600 bg-blue-50",
+      gradient: "gradient-card-blue",
     },
     {
       title: "Total Berat",
       value: `${data.totalBeratSampah} kg`,
       icon: Weight,
       color: "text-amber-600 bg-amber-50",
+      gradient: "gradient-card-amber",
     },
   ];
 
@@ -96,7 +99,7 @@ export default async function AnggotaDashboard({
         {cards.map((card) => {
           const Icon = card.icon;
           return (
-            <Card key={card.title} className="hover:shadow-md transition-shadow">
+            <Card key={card.title} className={`${card.gradient} hover:shadow-md transition-shadow`}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
@@ -135,7 +138,7 @@ export default async function AnggotaDashboard({
               {data.allApprovedSetoran.map((t) => (
                 <div
                   key={t.id}
-                  className="border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-white"
+                  className="border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-gradient-to-br from-white to-gray-50"
                 >
                   <div className="relative aspect-video bg-muted">
                     {t.foto ? (

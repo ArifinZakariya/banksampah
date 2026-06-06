@@ -1,0 +1,9 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "command": {
+    "deploy": {
+      "description": "Commit, push ke GitHub, dan trigger Vercel deploy",
+      "prompt": "Lakukan langkah-langkah berikut secara berurutan: 1) Jalankan git status untuk melihat perubahan, 2) Jalankan git add . untuk stage semua file, 3) Buat commit dengan pesan yang deskriptif sesuai perubahan yang ada, 4) Jalankan git push untuk push ke GitHub, 5) Konfirmasi bahwa push berhasil dan Vercel akan auto-deploy"
+    }
+  }
+}

@@ -11,7 +11,7 @@ export function InfoCard({ icon, label, value, className, ...props }: InfoCardPr
   return (
     <div
       className={cn(
-        "rounded-lg border bg-white p-4 shadow-sm",
+        "rounded-lg border bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm",
         className
       )}
       {...props}

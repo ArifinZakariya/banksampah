@@ -37,7 +37,7 @@
 }
 
 :root {
-  --background: #f8fafc;
+  --background: #f0fdf4;
   --foreground: #0f172a;
 }
 
@@ -57,5 +57,29 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+  }
+  .gradient-primary-subtle {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+  }
+  .gradient-header {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+  }
+  .gradient-card-blue {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  }
+  .gradient-card-emerald {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  }
+  .gradient-card-amber {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  }
+  .gradient-card-violet {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
   }
 }

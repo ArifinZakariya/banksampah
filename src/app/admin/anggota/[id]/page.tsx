@@ -157,7 +157,7 @@ export default async function AnggotaDetailPage({
               {anggota.transaksi.map((t) => (
                 <div
                   key={t.id}
-                  className="border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-white"
+                  className="border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-gradient-to-br from-white to-gray-50"
                 >
                   <div className="relative aspect-video bg-muted">
                     {t.foto ? (
