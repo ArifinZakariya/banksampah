@@ -122,3 +122,16 @@ model Log {
 
   @@map("logs")
 }
+
+model Verification {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  purpose   String   @map("purpose")
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("verifications")
+}
