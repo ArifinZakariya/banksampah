@@ -135,3 +135,20 @@ CREATE POLICY "Allow all" ON transaksi FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all" ON tabungan FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all" ON pencairan FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all" ON logs FOR ALL USING (true) WITH CHECK (true);
+
+-- 11. Tabel Verifications (untuk OTP email)
+CREATE TABLE verifications (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  email TEXT NOT NULL,
+  code TEXT NOT NULL,
+  purpose TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_verifications_email ON verifications(email);
+CREATE INDEX idx_verifications_code ON verifications(email, code, purpose);
+
+ALTER TABLE verifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all" ON verifications FOR ALL USING (true) WITH CHECK (true);
