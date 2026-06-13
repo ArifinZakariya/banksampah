@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken } from "./lib/jwt";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const publicPaths = ["/login", "/register", "/api/auth/login", "/api/auth/register", "/api/auth/verify", "/api/auth/forgot-password"];
+  const publicPaths = ["/login", "/register", "/api/auth/login", "/api/auth/register", "/api/auth/verify", "/api/auth/forgot-password", "/api/test-pdf"];
   if (publicPaths.some((p) => pathname.startsWith(p))) {
     return NextResponse.next();
   }

@@ -101,6 +101,7 @@ model Pencairan {
   status          StatusPencairan  @default(MENUNGGU)
   tanggalPencairan DateTime?        @map("tanggal_pencairan")
   catatan         String?
+  noInvoice       String?          @unique @map("no_invoice")
 
   user            User            @relation(fields: [userId], references: [id])
 

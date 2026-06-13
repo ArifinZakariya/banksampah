@@ -26,21 +26,6 @@ export async function POST(request: Request) {
   if (!tabungan || tabungan.saldo < body.jumlah) {
     return NextResponse.json({ error: "Saldo tidak mencukupi" }, { status: 400 });
   }
-  const lastPencairan = await prisma.pencairan.findFirst({
-    where: { userId: session.userId, status: "DISETUJUI" },
-    orderBy: { createdAt: "desc" },
-  });
-  if (lastPencairan) {
-    const monthsDiff =
-      (new Date().getTime() - lastPencairan.createdAt.getTime()) /
-      (1000 * 60 * 60 * 24 * 30);
-    if (monthsDiff < 3) {
-      return NextResponse.json(
-        { error: "Pencairan hanya bisa dilakukan setiap 3 bulan" },
-        { status: 400 }
-      );
-    }
-  }
   const pencairan = await prisma.pencairan.create({
     data: { userId: session.userId, jumlah: body.jumlah },
   });

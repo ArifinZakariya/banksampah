@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner, EmptyState } from "@/components/shared";
 import type { Pencairan } from "@/types";
-import { Wallet, CheckCircle2, XCircle, Trash2, AlertCircle, Calendar, Users } from "lucide-react";
+import { Wallet, CheckCircle2, XCircle, Trash2, AlertCircle, Calendar, Users, Download, Search, FileText } from "lucide-react";
 
 const statusBadge: Record<string, "warning" | "success" | "destructive"> = {
   MENUNGGU: "warning",
@@ -29,6 +29,7 @@ export default function AdminPencairanPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
+  const [searchInvoice, setSearchInvoice] = useState("");
 
   const members = useMemo(() => {
     if (!pencairan) return [];
@@ -43,6 +44,11 @@ export default function AdminPencairanPage() {
     if (!pencairan) return [];
     return pencairan.filter((p) => {
       if (selectedUserId && p.userId !== selectedUserId) return false;
+      if (searchInvoice && p.noInvoice) {
+        if (!p.noInvoice.toLowerCase().includes(searchInvoice.toLowerCase())) return false;
+      } else if (searchInvoice && !p.noInvoice) {
+        return false;
+      }
       const pDate = new Date(p.createdAt);
       if (startDate) {
         const start = new Date(startDate);
@@ -56,7 +62,7 @@ export default function AdminPencairanPage() {
       }
       return true;
     });
-  }, [pencairan, startDate, endDate, selectedUserId]);
+  }, [pencairan, startDate, endDate, selectedUserId, searchInvoice]);
 
   const handleStatus = async (id: string, status: "DISETUJUI" | "DITOLAK") => {
     setProcessingId(id);
@@ -71,10 +77,18 @@ export default function AdminPencairanPage() {
         const err = await res.json().catch(() => ({ error: "Gagal memproses pencairan" }));
         throw new Error(err.error || "Gagal memproses pencairan");
       }
-      setFeedback({
-        type: "success",
-        message: status === "DISETUJUI" ? "Pencairan berhasil disetujui" : "Pencairan berhasil ditolak",
-      });
+      const data = await res.json();
+      let msg = status === "DISETUJUI" ? "Pencairan berhasil disetujui" : "Pencairan berhasil ditolak";
+      if (status === "DISETUJUI") {
+        if (data.emailStatus === "sent") {
+          msg += ". Invoice PDF telah dikirim ke email anggota.";
+        } else if (data.emailStatus === "failed") {
+          msg += ". Namun gagal mengirim email invoice. Silakan download invoice dari tabel.";
+        } else {
+          msg += ".";
+        }
+      }
+      setFeedback({ type: "success", message: msg });
       mutate();
     } catch (err: any) {
       setFeedback({ type: "error", message: err.message });
@@ -99,13 +113,32 @@ export default function AdminPencairanPage() {
     }
   };
 
+  const handleDownloadInvoice = async (id: string) => {
+    try {
+      const res = await fetch(`/api/pencairan/${id}/invoice`);
+      if (!res.ok) throw new Error("Gagal download invoice");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Invoice.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err: any) {
+      setFeedback({ type: "error", message: err.message || "Gagal download invoice" });
+    }
+  };
+
   const clearFilters = () => {
     setStartDate("");
     setEndDate("");
     setSelectedUserId("");
+    setSearchInvoice("");
   };
 
-  const hasFilter = startDate || endDate || selectedUserId;
+  const hasFilter = startDate || endDate || selectedUserId || searchInvoice;
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -119,6 +152,16 @@ export default function AdminPencairanPage() {
           <p className="text-muted-foreground mt-1">Kelola permintaan pencairan saldo anggota</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Cari No. Invoice..."
+              value={searchInvoice}
+              onChange={(e) => setSearchInvoice(e.target.value)}
+              className="h-9 rounded-lg border border-border bg-white pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary w-48"
+            />
+          </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
           </div>
@@ -189,6 +232,7 @@ export default function AdminPencairanPage() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="px-6 py-3.5 text-left font-medium text-muted-foreground">Anggota</th>
+                    <th className="px-6 py-3.5 text-left font-medium text-muted-foreground">No. Invoice</th>
                     <th className="px-6 py-3.5 text-left font-medium text-muted-foreground">Jumlah</th>
                     <th className="px-6 py-3.5 text-left font-medium text-muted-foreground">Status</th>
                     <th className="px-6 py-3.5 text-left font-medium text-muted-foreground">Tanggal</th>
@@ -198,7 +242,7 @@ export default function AdminPencairanPage() {
                 <tbody>
                   {filteredPencairan.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
+                      <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
                         Tidak ada data yang cocok dengan filter
                       </td>
                     </tr>
@@ -206,6 +250,13 @@ export default function AdminPencairanPage() {
                     filteredPencairan.map((p) => (
                       <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
                         <td className="px-6 py-4 font-medium">{p.user?.nama}</td>
+                        <td className="px-6 py-4">
+                          {p.noInvoice ? (
+                            <span className="text-xs font-mono bg-muted px-2 py-1 rounded">{p.noInvoice}</span>
+                          ) : (
+                            <span className="text-muted-foreground text-xs">-</span>
+                          )}
+                        </td>
                         <td className="px-6 py-4 font-medium">Rp {p.jumlah.toLocaleString("id-ID")}</td>
                         <td className="px-6 py-4">
                           <Badge variant={statusBadge[p.status]}>{statusLabel[p.status]}</Badge>
@@ -242,6 +293,16 @@ export default function AdminPencairanPage() {
                                   Tolak
                                 </Button>
                               </>
+                            ) : p.status === "DISETUJUI" ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDownloadInvoice(p.id)}
+                                className="gap-1.5 text-sky-600 border-sky-200 hover:bg-sky-50"
+                              >
+                                <Download className="w-3.5 h-3.5" />
+                                Invoice
+                              </Button>
                             ) : (
                               <Button
                                 size="sm"

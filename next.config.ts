@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["pdfkit"],
   images: {
     remotePatterns: [
       {
@@ -12,9 +13,6 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
       },
     ],
-  },
-  turbopack: {
-    root: process.cwd(),
   },
 };
 

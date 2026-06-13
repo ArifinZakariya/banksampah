@@ -47,6 +47,7 @@ export interface Pencairan {
   status: "MENUNGGU" | "DISETUJUI" | "DITOLAK";
   tanggalPencairan?: string | null;
   catatan?: string | null;
+  noInvoice?: string | null;
   user?: { nama: string };
   createdAt: string;
 }

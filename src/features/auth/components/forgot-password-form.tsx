@@ -123,6 +123,7 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
             Masukkan kode 6 digit yang dikirim ke
           </CardDescription>
           <p className="text-sky-300 text-sm font-medium mt-1">{email}</p>
+          <p className="text-amber-300 text-xs mt-1">Jika tidak menerima email, cek folder spam pada email</p>
         </CardHeader>
         <CardContent className="space-y-6 pt-4 px-7 pb-8">
           <form onSubmit={handleVerifyOTP} className="space-y-4">

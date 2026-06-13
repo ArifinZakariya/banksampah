@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { generateInvoicePDF, generateInvoiceNumber } from "@/lib/invoice-pdf";
+import { sendInvoiceEmail } from "@/lib/email";
+import { formatDate } from "@/lib/utils";
 
 export async function DELETE(
   _request: Request,
@@ -34,13 +37,24 @@ export async function PATCH(
   }
   const { id } = await params;
   const body = await request.json();
+
+  const isApproving = body.status === "DISETUJUI";
+
+  let noInvoice: string | null = null;
+
+  if (isApproving) {
+    noInvoice = generateInvoiceNumber();
+  }
+
   const pencairan = await prisma.pencairan.update({
     where: { id },
     data: {
       status: body.status,
       catatan: body.catatan,
-      tanggalPencairan: body.status === "DISETUJUI" ? new Date() : null,
+      tanggalPencairan: isApproving ? new Date() : null,
+      ...(isApproving && noInvoice ? { noInvoice } : {}),
     },
+    include: { user: { select: { nama: true, email: true } } },
   });
 
   await recalculateSaldo(pencairan.userId);
@@ -49,11 +63,41 @@ export async function PATCH(
     data: {
       userId: session.userId,
       aksi: "KONFIRMASI_PENCAIRAN",
-      detail: `Pencairan ${id} status: ${body.status}`,
+      detail: `Pencairan ${id} status: ${body.status}${isApproving && noInvoice ? ` | Invoice: ${noInvoice}` : ""}`,
     },
   });
 
-  return NextResponse.json(pencairan);
+  let emailStatus: string | null = null;
+
+  if (isApproving && noInvoice && pencairan.user) {
+    try {
+      const tanggalFormatted = formatDate(new Date());
+      const pdfBuffer = await generateInvoicePDF({
+        noInvoice,
+        namaAnggota: pencairan.user.nama,
+        emailAnggota: pencairan.user.email,
+        jumlah: pencairan.jumlah,
+        tanggalPencairan: tanggalFormatted,
+        catatan: pencairan.catatan,
+      });
+
+      await sendInvoiceEmail({
+        email: pencairan.user.email,
+        nama: pencairan.user.nama,
+        noInvoice,
+        jumlah: pencairan.jumlah,
+        tanggalPencairan: tanggalFormatted,
+        pdfBuffer,
+      });
+
+      emailStatus = "sent";
+    } catch (emailError: any) {
+      console.error("Gagal mengirim invoice email:", emailError?.message || emailError);
+      emailStatus = "failed";
+    }
+  }
+
+  return NextResponse.json({ ...pencairan, emailStatus });
 }
 
 async function recalculateSaldo(userId: string) {
