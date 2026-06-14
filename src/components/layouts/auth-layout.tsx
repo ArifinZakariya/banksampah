@@ -1,9 +1,13 @@
+// ImageKit transformations: auto format (webp/avif), compressed quality,
+// capped width and progressive rendering so the background loads fast.
 const BG_URL =
-  "https://ik.imagekit.io/fuagv7oun/IMG-20260602-WA0018.jpg?updatedAt=1780406243703";
+  "https://ik.imagekit.io/fuagv7oun/IMG-20260602-WA0018.jpg?updatedAt=1780406243703&tr=w-1920,q-60,f-auto,pr-true";
 
 export function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* Fetch the background early with high priority instead of waiting for CSS */}
+      <link rel="preload" as="image" href={BG_URL} fetchPriority="high" />
       <style>{`
         .auth-glass {
           position: relative;
@@ -27,7 +31,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       `}</style>
       <div
         className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat p-4"
-        style={{ backgroundImage: `url(${BG_URL})` }}
+        style={{ backgroundImage: `url(${BG_URL})`, backgroundColor: "#0c1f33" }}
       >
         <div className="relative z-10 w-full max-w-md mx-auto">
           {children}

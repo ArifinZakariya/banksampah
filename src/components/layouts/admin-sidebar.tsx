@@ -49,20 +49,20 @@ export function AdminSidebar({ className }: { className?: string }) {
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden backdrop-blur-md"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-sidebar text-sidebar-foreground transition-transform duration-300 lg:relative lg:translate-x-0",
+          "glass-sidebar fixed inset-y-0 left-0 z-40 w-64 flex flex-col text-sidebar-foreground transition-transform duration-300 lg:relative lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-emerald-800/50">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500/20">
-            <Recycle className="w-5 h-5 text-emerald-400" />
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
+          <div className="glass-panel flex items-center justify-center w-10 h-10 rounded-xl">
+            <Recycle className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
             <h1 className="text-lg font-bold leading-tight">Bank Sampah</h1>
@@ -89,11 +89,11 @@ export function AdminSidebar({ className }: { className?: string }) {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   active
-                    ? "bg-emerald-500/15 text-emerald-300 shadow-sm"
-                    : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-hover"
+                    ? "glass-item-active text-white shadow-sm"
+                    : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-white/10"
                 )}
               >
-                <Icon className={cn("w-4 h-4 shrink-0", active && "text-emerald-400")} />
+                <Icon className={cn("w-4 h-4 shrink-0", active && "text-emerald-300")} />
                 <span>{item.label}</span>
                 {showBadge && (
                   <span className="ml-auto inline-flex items-center justify-center w-2 h-2 rounded-full bg-red-500" />
@@ -102,7 +102,7 @@ export function AdminSidebar({ className }: { className?: string }) {
             );
           })}
         </nav>
-        <div className="p-3 border-t border-emerald-800/50">
+        <div className="p-3 border-t border-white/10">
           <button
             onClick={logout}
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/60 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200 w-full cursor-pointer"
