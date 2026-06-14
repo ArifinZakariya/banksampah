@@ -15,18 +15,20 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useNotificationCounts } from "@/hooks/useNotificationCounts";
 
 const navItems = [
   { href: "/anggota", label: "Dashboard", icon: LayoutDashboard },
   { href: "/anggota/setor", label: "Setor Sampah", icon: Trash2 },
-  { href: "/anggota/histori", label: "Histori", icon: ScrollText },
-  { href: "/anggota/pencairan", label: "Pencairan", icon: Wallet },
+  { href: "/anggota/histori", label: "Histori", icon: ScrollText, markMenu: "histori" },
+  { href: "/anggota/pencairan", label: "Pencairan", icon: Wallet, markMenu: "pencairan_anggota" },
 ];
 
 export function AnggotaSidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const { logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { hasNewHistori, hasNewPencairanAnggota, markAsRead } = useNotificationCounts();
 
   return (
     <>
@@ -63,11 +65,19 @@ export function AnggotaSidebar({ className }: { className?: string }) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = pathname === item.href;
+            const showBadge =
+              (item.markMenu === "histori" && hasNewHistori) ||
+              (item.markMenu === "pencairan_anggota" && hasNewPencairanAnggota);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  setMobileOpen(false);
+                  if (item.markMenu) {
+                    markAsRead(item.markMenu);
+                  }
+                }}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   active
@@ -77,6 +87,9 @@ export function AnggotaSidebar({ className }: { className?: string }) {
               >
                 <Icon className={cn("w-4 h-4 shrink-0", active && "text-sky-300")} />
                 <span>{item.label}</span>
+                {showBadge && (
+                  <span className="ml-auto inline-flex items-center justify-center w-2 h-2 rounded-full bg-emerald-400" />
+                )}
               </Link>
             );
           })}

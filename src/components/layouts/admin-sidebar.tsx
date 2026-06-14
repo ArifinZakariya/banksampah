@@ -19,22 +19,24 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useNotificationCounts } from "@/hooks/useNotificationCounts";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/sampah", label: "Data Sampah", icon: Trash2 },
-  { href: "/admin/transaksi", label: "Transaksi", icon: ArrowLeftRight },
+  { href: "/admin/transaksi", label: "Transaksi", icon: ArrowLeftRight, markMenu: "transaksi" },
   { href: "/admin/laporan-setoran", label: "Laporan Setoran", icon: Camera },
   { href: "/admin/anggota", label: "Anggota", icon: Users },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/logs", label: "Log Aktivitas", icon: ScrollText },
-  { href: "/admin/pencairan", label: "Pencairan", icon: Wallet },
+  { href: "/admin/pencairan", label: "Pencairan", icon: Wallet, markMenu: "pencairan_admin" },
 ];
 
 export function AdminSidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const { logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { hasNewTransaksi, hasNewPencairanAdmin, markAsRead } = useNotificationCounts();
 
   return (
     <>
@@ -71,11 +73,19 @@ export function AdminSidebar({ className }: { className?: string }) {
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = pathname === item.href;
+            const showBadge =
+              (item.markMenu === "transaksi" && hasNewTransaksi) ||
+              (item.markMenu === "pencairan_admin" && hasNewPencairanAdmin);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  setMobileOpen(false);
+                  if (item.markMenu) {
+                    markAsRead(item.markMenu);
+                  }
+                }}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   active
@@ -85,6 +95,9 @@ export function AdminSidebar({ className }: { className?: string }) {
               >
                 <Icon className={cn("w-4 h-4 shrink-0", active && "text-emerald-400")} />
                 <span>{item.label}</span>
+                {showBadge && (
+                  <span className="ml-auto inline-flex items-center justify-center w-2 h-2 rounded-full bg-red-500" />
+                )}
               </Link>
             );
           })}

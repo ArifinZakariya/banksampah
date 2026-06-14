@@ -34,10 +34,11 @@ model User {
   alamat    String?
   noTelpon  String?
 
-  transaksi Transaksi[]
-  tabungan  Tabungan?
-  pencairan Pencairan[]
-  logs      Log[]
+  transaksi        Transaksi[]
+  tabungan         Tabungan?
+  pencairan        Pencairan[]
+  logs             Log[]
+  notificationReads NotificationRead[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -135,4 +136,16 @@ model Verification {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("verifications")
+}
+
+model NotificationRead {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  menu      String
+  lastRead  DateTime @default(now()) @map("last_read")
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, menu])
+  @@map("notification_reads")
 }
