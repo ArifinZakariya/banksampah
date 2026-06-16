@@ -11,12 +11,13 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       <style>{`
         .auth-glass {
           position: relative;
-          backdrop-filter: blur(32px);
-          -webkit-backdrop-filter: blur(32px);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           border-radius: 0.75rem;
-          border: 1px solid rgba(255,255,255,0.2);
-          box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.35);
           overflow: hidden;
+          background-color: rgba(0,0,0,0.25);
         }
         .auth-glass-overlay {
           position: absolute;
@@ -36,8 +37,8 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
         <div className="relative z-10 w-full max-w-md mx-auto">
           {children}
         </div>
-        <footer className="absolute bottom-4 z-10 text-center text-sm text-white/50">
-          &copy; {new Date().getFullYear()} Gusdurian Mojokerto
+        <footer className="absolute bottom-4 z-10 text-center text-sm text-white font-medium bg-black/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10">
+          &copy; 2026 Gusdurian Mojokerto
         </footer>
       </div>
     </>
