@@ -10,7 +10,7 @@
     "claudefire": {
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "baseURL": "https://claudfire.net/v1"
+        "baseURL": "http://localhost:20128/v1"
       },
       "models": {
         "claude-opus-4.8": {},

@@ -9,14 +9,18 @@ export async function GET() {
   }
 
   if (session.role === "ADMIN") {
-    const [pendingTransaksi, pendingPencairan] = await Promise.all([
+    const [pendingTransaksi, pendingPencairan, totalTransaksi, totalPencairan] = await Promise.all([
       prisma.transaksi.count({ where: { status: "PENDING" } }),
       prisma.pencairan.count({ where: { status: "MENUNGGU" } }),
+      prisma.transaksi.count(),
+      prisma.pencairan.count(),
     ]);
 
     return NextResponse.json({
       pendingTransaksi,
       pendingPencairan,
+      totalTransaksi,
+      totalPencairan,
       confirmedTransaksi: 0,
       approvedPencairan: 0,
     });
@@ -34,6 +38,8 @@ export async function GET() {
   return NextResponse.json({
     pendingTransaksi: 0,
     pendingPencairan: 0,
+    totalTransaksi: 0,
+    totalPencairan: 0,
     confirmedTransaksi,
     approvedPencairan,
   });

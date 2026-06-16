@@ -56,11 +56,7 @@ export default function SetorSampahPage() {
 
       if (!res.ok) throw new Error("Gagal menyetor sampah");
 
-      router.refresh();
-      setBeratKg("");
-      setCatatan("");
-      setFoto(null);
-      setFotoPreview(null);
+      router.push("/anggota/histori?pending=1");
     } catch (err) {
       console.error(err);
     } finally {

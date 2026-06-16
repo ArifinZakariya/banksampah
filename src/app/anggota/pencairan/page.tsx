@@ -18,6 +18,8 @@ export default async function PencairanPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const hasPending = pencairan.some((p) => p.status === "MENUNGGU");
+
   return (
     <div className="space-y-6">
       <div>
@@ -45,7 +47,7 @@ export default async function PencairanPage() {
           </CardContent>
         </Card>
 
-        <PencairanFormWrapper saldo={tabungan?.saldo ?? 0} />
+        <PencairanFormWrapper saldo={tabungan?.saldo ?? 0} hasPending={hasPending} />
       </div>
 
       <Card>

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ScrollText } from "lucide-react";
+import { Suspense } from "react";
+import { HistoriPopupWrapper } from "./histori-popup-wrapper";
 
 export default async function HistoriPage() {
   const session = await getSession();
@@ -15,8 +17,13 @@ export default async function HistoriPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const hasPending = transaksi.some((t) => t.status === "PENDING");
+
   return (
     <div className="space-y-6">
+      <Suspense>
+        <HistoriPopupWrapper hasPending={hasPending} />
+      </Suspense>
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Histori Transaksi</h1>
         <p className="text-muted-foreground mt-1">Riwayat setoran sampah Anda</p>
