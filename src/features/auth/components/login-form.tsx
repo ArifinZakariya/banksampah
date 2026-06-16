@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { useAuth } from "../hooks/useAuth";
@@ -27,7 +28,7 @@ export function LoginForm({ className, logoSrc }: { className?: string; logoSrc?
         {logoSrc && (
           <Image
             src={logoSrc}
-            alt="Bank Sampah"
+            alt="Jagad Resik"
             width={88}
             height={88}
             className="w-24 h-24 mx-auto mb-4 object-contain brightness-0 invert"
@@ -36,7 +37,7 @@ export function LoginForm({ className, logoSrc }: { className?: string; logoSrc?
         )}
         <CardTitle className="text-2xl font-bold text-white tracking-tight">Masuk</CardTitle>
         <CardDescription className="text-white/50 text-sm mt-1">
-          Masuk ke akun Bank Sampah Anda
+          Masuk ke akun Jagad Resik Anda
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 pt-5 px-8 pb-10">
@@ -65,9 +66,8 @@ export function LoginForm({ className, logoSrc }: { className?: string; logoSrc?
                 Lupa password?
               </Link>
             </div>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

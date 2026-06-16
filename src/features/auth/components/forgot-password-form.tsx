@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { KeyRound, ArrowLeft, CheckCircle2, Mail } from "lucide-react";
@@ -194,9 +195,8 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
             )}
             <div className="space-y-1.5">
               <Label htmlFor="newPassword" className="text-white/80 text-xs font-medium">Password Baru</Label>
-              <Input
+              <PasswordInput
                 id="newPassword"
-                type="password"
                 placeholder="Min. 6 karakter"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -207,9 +207,8 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="confirmPassword" className="text-white/80 text-xs font-medium">Konfirmasi Password Baru</Label>
-              <Input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 placeholder="Ulangi password baru"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

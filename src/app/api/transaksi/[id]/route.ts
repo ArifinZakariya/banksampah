@@ -42,26 +42,34 @@ export async function PATCH(
   }
   const { id } = await params;
   const body = await request.json();
-  const transaksi = await prisma.transaksi.update({
-    where: { id },
-    data: {
-      status: body.status,
-      catatan: body.catatan,
-      verifiedBy: session.userId,
-    },
-  });
 
-  await recalculateSaldo(transaksi.userId);
+  try {
+    const transaksi = await prisma.transaksi.update({
+      where: { id },
+      data: {
+        status: body.status,
+        catatan: body.catatan || null,
+        verifiedBy: session.userId,
+      },
+    });
 
-  await prisma.log.create({
-    data: {
-      userId: session.userId,
-      aksi: "KONFIRMASI_TRANSAKSI",
-      detail: `Transaksi ${id} status: ${body.status}`,
-    },
-  });
+    const saldoBaru = await recalculateSaldo(transaksi.userId);
 
-  return NextResponse.json(transaksi);
+    await prisma.log.create({
+      data: {
+        userId: session.userId,
+        aksi: "KONFIRMASI_TRANSAKSI",
+        detail: `Transaksi ${id} status: ${body.status}`,
+      },
+    });
+
+    return NextResponse.json({ ...transaksi, saldoBaru });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Gagal memproses transaksi" },
+      { status: 500 }
+    );
+  }
 }
 
 async function recalculateSaldo(userId: string) {
@@ -77,8 +85,11 @@ async function recalculateSaldo(userId: string) {
 
   const saldo = (totalSetoran._sum.totalHarga || 0) - (totalPencairan._sum.jumlah || 0);
 
-  await prisma.tabungan.update({
+  const updated = await prisma.tabungan.upsert({
     where: { userId },
-    data: { saldo: Math.max(0, saldo) },
+    create: { userId, saldo: Math.max(0, saldo) },
+    update: { saldo: Math.max(0, saldo) },
   });
+
+  return updated.saldo;
 }

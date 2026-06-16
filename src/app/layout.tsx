@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bank Sampah",
-  description: "Aplikasi Bank Sampah Digital",
+  title: "Jagad Resik",
+  description: "Aplikasi Jagad Resik Digital",
 };
 
 export default function RootLayout({

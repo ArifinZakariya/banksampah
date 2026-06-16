@@ -65,7 +65,7 @@ export function AdminSidebar({ className }: { className?: string }) {
             <Recycle className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-tight">Bank Sampah</h1>
+            <h1 className="text-lg font-bold leading-tight">Jagad Resik</h1>
             <p className="text-xs text-sidebar-muted">Panel Admin</p>
           </div>
         </div>

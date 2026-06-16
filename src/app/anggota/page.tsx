@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Wallet, Recycle, Weight, Camera, ArrowRight } from "lucide-react";
+import { Wallet, Recycle, Weight, Camera, ArrowRight, Clock, Banknote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -25,11 +25,19 @@ function buildDateFilter(start?: string, end?: string) {
 }
 
 async function getAnggotaData(userId: string, dateFilter: Record<string, unknown>) {
-  const dateWhere = dateFilter.AND ? dateFilter : {};
-  const [tabungan, transaksiCount, totalBerat, allApprovedSetoran] = await Promise.all([
+  const whereBase = { userId, ...(dateFilter.AND ? dateFilter : {}) };
+  const [tabungan, pendingCount, confirmedSetoran, totalDicairkan, totalBerat, allApprovedSetoran] = await Promise.all([
     prisma.tabungan.findUnique({ where: { userId } }),
-    prisma.transaksi.count({ where: { userId, ...(dateFilter.AND ? dateFilter : {}) } }),
-    prisma.transaksi.aggregate({ _sum: { beratKg: true }, where: { userId, ...(dateFilter.AND ? dateFilter : {}) } }),
+    prisma.transaksi.count({ where: { ...whereBase, status: "PENDING" } }),
+    prisma.transaksi.aggregate({
+      _sum: { totalHarga: true },
+      where: { ...whereBase, status: "DIKONFIRMASI" },
+    }),
+    prisma.pencairan.aggregate({
+      _sum: { jumlah: true },
+      where: { userId, status: "DISETUJUI" },
+    }),
+    prisma.transaksi.aggregate({ _sum: { beratKg: true }, where: whereBase }),
     prisma.transaksi.findMany({
       where: { status: "DIKONFIRMASI", ...(dateFilter.AND ? dateFilter : {}) },
       include: {
@@ -42,7 +50,9 @@ async function getAnggotaData(userId: string, dateFilter: Record<string, unknown
   ]);
   return {
     tabungan,
-    transaksiCount,
+    pendingCount,
+    confirmedSetoran: confirmedSetoran._sum.totalHarga || 0,
+    totalDicairkan: totalDicairkan._sum.jumlah || 0,
     totalBeratSampah: totalBerat._sum.beratKg || 0,
     allApprovedSetoran,
   };
@@ -64,13 +74,14 @@ export default async function AnggotaDashboard({
     {
       title: "Saldo Tabungan",
       value: `Rp ${(data.tabungan?.saldo ?? 0).toLocaleString("id-ID")}`,
+      subtitle: data.totalDicairkan > 0 ? `Rp ${data.totalDicairkan.toLocaleString("id-ID")} sudah ditarik` : undefined,
       icon: Wallet,
       color: "text-emerald-600 bg-emerald-50",
       gradient: "gradient-card-emerald",
     },
     {
-      title: "Total Setoran",
-      value: `${data.transaksiCount}x`,
+      title: "Setoran Dikonfirmasi",
+      value: `Rp ${data.confirmedSetoran.toLocaleString("id-ID")}`,
       icon: Recycle,
       color: "text-blue-600 bg-blue-50",
       gradient: "gradient-card-blue",
@@ -84,18 +95,38 @@ export default async function AnggotaDashboard({
     },
   ];
 
+  if (data.pendingCount > 0) {
+    cards.push({
+      title: "Menunggu Konfirmasi",
+      value: `${data.pendingCount}x`,
+      icon: Clock,
+      color: "text-orange-600 bg-orange-50",
+      gradient: "gradient-card-orange",
+    });
+  }
+
+  if (data.totalDicairkan > 0) {
+    cards.push({
+      title: "Sudah Dicairkan",
+      value: `Rp ${data.totalDicairkan.toLocaleString("id-ID")}`,
+      icon: Banknote,
+      color: "text-violet-600 bg-violet-50",
+      gradient: "gradient-card-violet",
+    });
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Selamat datang di Bank Sampah</p>
+          <p className="text-muted-foreground mt-1">Selamat datang di Jagad Resik</p>
         </div>
         <Suspense>
           <DateFilter />
         </Suspense>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {cards.map((card) => {
           const Icon = card.icon;
           return (
@@ -105,6 +136,9 @@ export default async function AnggotaDashboard({
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-muted-foreground">{card.title}</p>
                     <p className="text-2xl lg:text-3xl font-bold tracking-tight">{card.value}</p>
+                    {"subtitle" in card && card.subtitle && (
+                      <p className="text-xs text-muted-foreground">{card.subtitle}</p>
+                    )}
                   </div>
                   <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${card.color}`}>
                     <Icon className="w-6 h-6" />

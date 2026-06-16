@@ -82,6 +82,9 @@ body {
   .gradient-card-violet {
     background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
   }
+  .gradient-card-orange {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  }
   /* Glassmorphism sidebar (emerald/admin) */
   .glass-sidebar {
     background: linear-gradient(165deg, rgba(2, 44, 34, 0.92) 0%, rgba(3, 58, 45, 0.88) 45%, rgba(4, 31, 51, 0.9) 100%);

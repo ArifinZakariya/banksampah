@@ -96,7 +96,7 @@ export default async function AdminDashboard({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Selamat datang di panel admin Bank Sampah</p>
+          <p className="text-muted-foreground mt-1">Selamat datang di panel admin Jagad Resik</p>
         </div>
         <Suspense>
           <DateFilter />

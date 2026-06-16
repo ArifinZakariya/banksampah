@@ -17,8 +17,8 @@ interface SendOTPParams {
 export async function sendOTP({ email, code, purpose }: SendOTPParams) {
   const subject =
     purpose === "register"
-      ? "Verifikasi Email - Bank Sampah"
-      : "Reset Password - Bank Sampah";
+      ? "Verifikasi Email - Jagad Resik"
+      : "Reset Password - Jagad Resik";
 
   const heading =
     purpose === "register"
@@ -43,7 +43,7 @@ export async function sendOTP({ email, code, purpose }: SendOTPParams) {
           <div style="width:56px;height:56px;margin:0 auto 16px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;">
             <span style="font-size:28px;">♻️</span>
           </div>
-          <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0;">Bank Sampah</h1>
+          <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0;">Jagad Resik</h1>
         </div>
         <div style="padding:32px 24px;">
           <h2 style="color:#0f172a;font-size:18px;font-weight:600;margin:0 0 8px;">${heading}</h2>
@@ -59,7 +59,7 @@ export async function sendOTP({ email, code, purpose }: SendOTPParams) {
   `;
 
   await transporter.sendMail({
-    from: `"Bank Sampah" <${process.env.GMAIL_USER}>`,
+    from: `"Jagad Resik" <${process.env.GMAIL_USER}>`,
     to: email,
     subject,
     html,
@@ -124,10 +124,10 @@ export async function sendInvoiceEmail({
             </table>
           </div>
           <p style="color:#64748b;font-size:14px;margin:0 0 8px;">Invoice PDF terlampir dalam email ini. Silakan simpan sebagai bukti transaksi.</p>
-          <p style="color:#94a3b8;font-size:12px;margin:0;text-align:center;">Jika ada pertanyaan, silakan hubungi admin Bank Sampah.</p>
+          <p style="color:#94a3b8;font-size:12px;margin:0;text-align:center;">Jika ada pertanyaan, silakan hubungi admin Jagad Resik.</p>
         </div>
         <div style="background:#f1f5f9;padding:16px 24px;text-align:center;">
-          <p style="color:#94a3b8;font-size:11px;margin:0;">Bank Sampah Digital &copy; ${new Date().getFullYear()}</p>
+          <p style="color:#94a3b8;font-size:11px;margin:0;">Jagad Resik Digital &copy; ${new Date().getFullYear()}</p>
         </div>
       </div>
     </body>
@@ -135,9 +135,9 @@ export async function sendInvoiceEmail({
   `;
 
   await transporter.sendMail({
-    from: `"Bank Sampah" <${process.env.GMAIL_USER}>`,
+    from: `"Jagad Resik" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: `Invoice Pencairan ${noInvoice} - Bank Sampah`,
+    subject: `Invoice Pencairan ${noInvoice} - Jagad Resik`,
     html,
     attachments: [
       {

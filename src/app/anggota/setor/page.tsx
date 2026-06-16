@@ -22,6 +22,9 @@ export default function SetorSampahPage() {
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const selectedSampah = (sampahList ?? []).find((s: Sampah) => s.id === sampahId);
+  const previewHarga = selectedSampah && beratKg ? selectedSampah.hargaPerKg * parseFloat(beratKg) : 0;
+
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -154,6 +157,12 @@ export default function SetorSampahPage() {
                 onChange={(e) => setCatatan(e.target.value)}
               />
             </div>
+            {previewHarga > 0 && (
+              <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                <span className="text-sm text-emerald-700">Estimasi Saldo</span>
+                <span className="text-lg font-bold text-emerald-700">Rp {previewHarga.toLocaleString("id-ID")}</span>
+              </div>
+            )}
             <Button type="submit" className="w-full gap-2" disabled={loading} size="lg">
               {loading ? (
                 <span className="flex items-center gap-2">

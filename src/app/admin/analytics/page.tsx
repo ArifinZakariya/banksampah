@@ -96,7 +96,7 @@ export default async function AdminAnalyticsPage({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground mt-1">Ringkasan data dan statistik Bank Sampah</p>
+          <p className="text-muted-foreground mt-1">Ringkasan data dan statistik Jagad Resik</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <Suspense>

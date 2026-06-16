@@ -46,7 +46,7 @@ export default function AdminAnggotaPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Anggota</h1>
-        <p className="text-muted-foreground mt-1">Daftar semua anggota Bank Sampah</p>
+        <p className="text-muted-foreground mt-1">Daftar semua anggota Jagad Resik</p>
       </div>
 
       {feedback && (

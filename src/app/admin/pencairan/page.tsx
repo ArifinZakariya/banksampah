@@ -292,17 +292,38 @@ export default function AdminPencairanPage() {
                                   ) : <XCircle className="w-3.5 h-3.5" />}
                                   Tolak
                                 </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleDelete(p.id)}
+                                  disabled={processingId === p.id}
+                                  className="gap-1.5 text-red-600 border-red-200 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
                               </>
                             ) : p.status === "DISETUJUI" ? (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleDownloadInvoice(p.id)}
-                                className="gap-1.5 text-sky-600 border-sky-200 hover:bg-sky-50"
-                              >
-                                <Download className="w-3.5 h-3.5" />
-                                Invoice
-                              </Button>
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleDownloadInvoice(p.id)}
+                                  className="gap-1.5 text-sky-600 border-sky-200 hover:bg-sky-50"
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                  Invoice
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleDelete(p.id)}
+                                  disabled={processingId === p.id}
+                                  className="gap-1.5 text-red-600 border-red-200 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  Hapus
+                                </Button>
+                              </>
                             ) : (
                               <Button
                                 size="sm"

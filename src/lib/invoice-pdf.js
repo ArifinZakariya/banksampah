@@ -97,7 +97,7 @@ function generateInvoicePDF(data) {
       infoY += 80;
       doc.fontSize(10).font("Helvetica").fillColor("#333333").text("Mengetahui,", pageWidth - 250, infoY, { align: "center", width: 200 });
       infoY += 20;
-      doc.font("Helvetica-Bold").text("Kepala Program Bank Sampah", pageWidth - 250, infoY, { align: "center", width: 200 });
+      doc.font("Helvetica-Bold").text("Kepala Program Jagad Resik", pageWidth - 250, infoY, { align: "center", width: 200 });
       infoY += 25;
       doc.font("Helvetica-Bold").fillColor("#059669").text("Bu Nissa", pageWidth - 250, infoY, { align: "center", width: 200 });
 
@@ -105,7 +105,7 @@ function generateInvoicePDF(data) {
       doc.moveTo(pageWidth - 230, infoY).lineTo(pageWidth - 70, infoY).lineWidth(0.5).strokeColor("#333333").stroke();
 
       const footerY = doc.page.height - 60;
-      doc.fontSize(8).font("Helvetica").fillColor("#999999").text("Invoice ini merupakan bukti pencairan saldo dari Bank Sampah Digital.", 50, footerY, { align: "center", width: contentWidth });
+      doc.fontSize(8).font("Helvetica").fillColor("#999999").text("Invoice ini merupakan bukti pencairan saldo dari Jagad Resik Digital.", 50, footerY, { align: "center", width: contentWidth });
       doc.text("Simpan invoice ini sebagai bukti transaksi.", 50, footerY + 12, { align: "center", width: contentWidth });
 
       doc.end();

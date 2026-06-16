@@ -113,8 +113,9 @@ async function recalculateSaldo(userId: string) {
 
   const saldo = (totalSetoran._sum.totalHarga || 0) - (totalPencairan._sum.jumlah || 0);
 
-  await prisma.tabungan.update({
+  await prisma.tabungan.upsert({
     where: { userId },
-    data: { saldo: Math.max(0, saldo) },
+    create: { userId, saldo: Math.max(0, saldo) },
+    update: { saldo: Math.max(0, saldo) },
   });
 }
