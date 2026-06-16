@@ -9,32 +9,28 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
       {/* Fetch the background early with high priority instead of waiting for CSS */}
       <link rel="preload" as="image" href={BG_URL} fetchPriority="high" />
       <style>{`
-        .auth-glass {
+        .auth-glass-wrapper {
           position: relative;
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           border-radius: 0.75rem;
           border: 1px solid rgba(255,255,255,0.15);
           box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.35);
-          overflow: hidden;
-          background-color: rgba(0,0,0,0.25);
         }
-        .auth-glass-overlay {
+        .auth-glass-wrapper::before {
+          content: "";
           position: absolute;
           inset: 0;
-          background-color: rgba(0,0,0,0.55);
+          background-color: rgba(0,0,0,0.25);
           border-radius: inherit;
-        }
-        .auth-glass-content {
-          position: relative;
-          z-index: 10;
+          z-index: -1;
         }
       `}</style>
       <div
         className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat p-4"
         style={{ backgroundImage: `url(${BG_URL})`, backgroundColor: "#0c1f33" }}
       >
-        <div className="relative z-10 w-full max-w-md mx-auto">
+        <div className="auth-glass-wrapper w-full max-w-md mx-auto">
           {children}
         </div>
         <footer className="absolute bottom-4 z-10 text-center text-sm text-white font-medium bg-black/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10">

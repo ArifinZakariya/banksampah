@@ -7,16 +7,11 @@ const LOGO_URL =
 export default function LoginPage() {
   return (
     <AuthLayout>
-      <div className="animate-fade-in-up">
-        <div className="auth-glass">
-          <div className="auth-glass-overlay" />
-          <div className="auth-glass-content">
-            <LoginForm
-              logoSrc={LOGO_URL}
-              className="bg-transparent border-0 shadow-none"
-            />
-          </div>
-        </div>
+      <div className="animate-fade-in-up p-1">
+        <LoginForm
+          logoSrc={LOGO_URL}
+          className="bg-transparent border-0 shadow-none"
+        />
       </div>
     </AuthLayout>
   );

@@ -4,13 +4,8 @@ import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-f
 export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
-      <div className="animate-fade-in-up">
-        <div className="auth-glass">
-          <div className="auth-glass-overlay" />
-          <div className="auth-glass-content">
-            <ForgotPasswordForm className="bg-transparent border-0 shadow-none" />
-          </div>
-        </div>
+      <div className="animate-fade-in-up p-1">
+        <ForgotPasswordForm className="bg-transparent border-0 shadow-none" />
       </div>
     </AuthLayout>
   );
